@@ -1,0 +1,181 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}AI Examiner Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-robot"></i> AI Examiner Dashboard</h2>
+                <a href="{% url 'ai_examiner:create' %}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> New AI Examiner Session
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Total Sessions</h5>
+                    <h3>{{ total_examiners }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Active Sessions</h5>
+                    <h3>{{ active_examiners }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Completed</h5>
+                    <h3>{{ completed_examiners }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <h5 class="card-title">AI Features</h5>
+                    <h6>EasyOCR + Gemini AI</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Examiner Sessions -->
+    <div class="card">
+        <div class="card-header">
+            <h5><i class="fas fa-list"></i> Recent AI Examiner Sessions</h5>
+        </div>
+        <div class="card-body">
+            {% if ai_examiners %}
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Status</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for examiner in ai_examiners %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ examiner.title }}</strong>
+                                        {% if examiner.description %}
+                                            <br><small class="text-muted">{{ examiner.description|truncatewords:10 }}</small>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if examiner.status == 'created' %}
+                                            <span class="badge bg-primary">Created</span>
+                                        {% elif examiner.status == 'processing' %}
+                                            <span class="badge bg-warning">Processing</span>
+                                        {% elif examiner.status == 'completed' %}
+                                            <span class="badge bg-success">Completed</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">Failed</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ examiner.created_at|date:"M d, Y" }}</td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a href="{% url 'ai_examiner:detail' examiner.id %}" class="btn btn-sm btn-outline-primary">
+                                                <i class="fas fa-eye"></i> View
+                                            </a>
+                                            <a href="{% url 'ai_examiner:model_answers' examiner.id %}" class="btn btn-sm btn-outline-info">
+                                                <i class="fas fa-file-alt"></i> Answers
+                                            </a>
+                                            <a href="{% url 'ai_examiner:upload_sheets' examiner.id %}" class="btn btn-sm btn-outline-success">
+                                                <i class="fas fa-upload"></i> Upload
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-robot fa-3x text-muted mb-3"></i>
+                    <h4>No AI Examiner Sessions Yet</h4>
+                    <p class="text-muted">Start by creating your first AI Examiner session to evaluate handwritten answer sheets.</p>
+                    <a href="{% url 'ai_examiner:create' %}" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Create AI Examiner Session
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- AI Features Overview -->
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-brain"></i> AI Features</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled">
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success"></i>
+                            <strong>EasyOCR Integration:</strong> Advanced handwritten text recognition
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success"></i>
+                            <strong>Google Gemini AI:</strong> Intelligent answer evaluation
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success"></i>
+                            <strong>PDF Processing:</strong> Support for scanned answer sheets
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success"></i>
+                            <strong>Batch Evaluation:</strong> Process multiple sheets simultaneously
+                        </li>
+                        <li class="mb-2">
+                            <i class="fas fa-check text-success"></i>
+                            <strong>Grade Card Generation:</strong> Automatic PDF grade cards
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-cogs"></i> Workflow</h5>
+                </div>
+                <div class="card-body">
+                    <ol>
+                        <li><strong>Create AI Examiner Session</strong></li>
+                        <li><strong>Upload Model Answers</strong> (PDF/Images)</li>
+                        <li><strong>Upload Student Sheets</strong> (Handwritten)</li>
+                        <li><strong>Automatic OCR Processing</strong> with EasyOCR</li>
+                        <li><strong>AI Evaluation</strong> with Google Gemini</li>
+                        <li><strong>Generate Grade Cards</strong> & Reports</li>
+                    </ol>
+                    <div class="mt-3">
+                        <a href="{% url 'ai_examiner:create' %}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-play"></i> Get Started
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

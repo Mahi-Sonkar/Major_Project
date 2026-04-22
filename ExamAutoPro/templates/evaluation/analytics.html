@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}Evaluation Analytics - ExamAutoPro{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="fas fa-chart-bar text-primary me-2"></i>Evaluation Analytics</h1>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm text-center p-4 h-100">
+                <div class="mb-2"><i class="fas fa-robot fa-3x text-primary opacity-25"></i></div>
+                <h2 class="mb-0">{{ total_evaluations }}</h2>
+                <div class="text-muted">Total AI Evaluations</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm text-center p-4 h-100">
+                <div class="mb-2"><i class="fas fa-check-circle fa-3x text-success opacity-25"></i></div>
+                <h2 class="mb-0">{{ avg_similarity }}%</h2>
+                <div class="text-muted">Average Similarity Score</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm text-center p-4 h-100">
+                <div class="mb-2"><i class="fas fa-shield-alt fa-3x text-info opacity-25"></i></div>
+                <h2 class="mb-0">{{ avg_confidence }}%</h2>
+                <div class="text-muted">Average AI Confidence</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="alert alert-info border-0 shadow-sm">
+        <i class="fas fa-info-circle me-2"></i> These statistics are based on the latest AI-evaluated submissions.
+    </div>
+</div>
+{% endblock %}
